@@ -17,4 +17,14 @@
     {
         Cart.DisplayCart();
     }
+
+    public void Checkout()
+    {
+        Console.WriteLine("Finalizarea comenzii:");
+        Cart.DisplayCart();
+        double total = Cart.GetTotal();
+        Console.WriteLine($"Total de plată: {total:C}");
+        Cart.Clear();
+        Console.WriteLine("Comanda a fost procesată și coșul a fost golit.");
+    }
 }

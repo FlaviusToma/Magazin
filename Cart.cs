@@ -1,33 +1,37 @@
-﻿public class Cart
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class Cart
 {
-    private Dictionary<Product, int> products = new Dictionary<Product, int>();
+    private List<(Product, int)> items = new List<(Product, int)>();
 
     public void AddProduct(Product product, int quantity)
     {
-        if (products.ContainsKey(product))
-        {
-            products[product] += quantity;
-        }
-        else
-        {
-            products[product] = quantity;
-        }
+        items.Add((product, quantity));
     }
 
     public void DisplayCart()
     {
-        Console.WriteLine("Cart:");
-        double total = 0;
-        foreach (var item in products)
+        foreach (var item in items)
         {
-            Console.WriteLine($"{item.Key.Name} x {item.Value} = ${item.Key.Price * item.Value}");
-            total += item.Key.Price * item.Value;
+            Console.WriteLine($"{item.Item1} x {item.Item2}");
         }
-        Console.WriteLine($"Total: ${total}");
+        Console.WriteLine($"Total: {GetTotal():C}");
     }
 
-    public Order Checkout()
+    public double GetTotal()
     {
-        return new Order(new Dictionary<Product, int>(products));
+        return items.Sum(item => item.Item1.Price * item.Item2);
+    }
+
+    public void Clear()
+    {
+        items.Clear();
+    }
+
+    public List<(Product, int)> GetItems()
+    {
+        return items;
     }
 }

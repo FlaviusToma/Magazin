@@ -7,7 +7,7 @@
 
     public void ProcessOrder(Order order)
     {
-        order.Process();
+        order.ProcessOrder();
         Console.WriteLine($"Order {order.OrderId} processed.");
     }
 }

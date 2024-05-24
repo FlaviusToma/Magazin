@@ -1,4 +1,7 @@
-﻿public class Store
+﻿using System;
+using System.Collections.Generic;
+
+public class Store
 {
     private List<Product> products = new List<Product>();
     private List<Order> orders = new List<Order>();
@@ -6,10 +9,14 @@
 
     public Store()
     {
-
-        products.Add(new Product("Tricou", 19.99));
-        products.Add(new Product("Blugi", 49.99));
-        products.Add(new Product("Geacă", 99.99));
+        products.Add(new Product("Tricou", 19.99, "M"));
+        products.Add(new Product("Blugi", 49.99, "32"));
+        products.Add(new Product("Geacă", 99.99, "XL"));
+        products.Add(new Product("Pantaloni scurti", 14.99, "36"));
+        products.Add(new Product("Trening", 69.99, "L"));
+        products.Add(new Product("Sapca", 9.99, "S"));
+        products.Add(new Product("Bluza", 19.99, "M"));
+        products.Add(new Product("Hoodie", 59.99, "L"));
     }
 
     public void Run()
@@ -23,6 +30,7 @@
             Console.WriteLine("3. Iesire");
             Console.Write("Selectati o optiune: ");
             string option = Console.ReadLine();
+            Console.WriteLine(" ");
 
             if (option == "1")
             {
@@ -133,13 +141,25 @@
                     Console.Write("Introduceti cantitatea: ");
                     if (int.TryParse(Console.ReadLine(), out int quantity))
                     {
-                        client.AddToCart(product, quantity);
-                        Console.WriteLine("Produs adaugat in cos.");
+                        Console.Write("Introduceti marimea: ");
+                        string productSize = Console.ReadLine();
+                        Product product1 = products.Find(p => p.Size.Equals(productSize, StringComparison.OrdinalIgnoreCase));
+                        if (product1 != null)
+                        {
+                            client.AddToCart(product, quantity);
+                            Console.WriteLine("Produs adaugat in cos.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Marimea nu este in stoc.");
+                        }
+                       
                     }
                     else
                     {
                         Console.WriteLine("Cantitate invalida.");
                     }
+                    
                 }
                 else
                 {
@@ -152,10 +172,10 @@
             }
             else if (option == "4")
             {
-                Order order = client.Cart.Checkout();
+                var order = new Order(client.Cart.GetItems());
                 orders.Add(order);
+                client.Checkout();
                 Console.WriteLine("Comanda a fost plasata.");
-                order.DisplayOrder();
             }
             else if (option == "5")
             {
@@ -182,18 +202,19 @@
 
             if (option == "1")
             {
-                int k = 0;
+                bool unprocessedOrdersExist = false;
                 foreach (var order in orders)
                 {
-                    k = 1;
                     if (!order.IsProcessed)
                     {
                         order.DisplayOrder();
+                        unprocessedOrdersExist = true;
                     }
-                    
                 }
-                if (k == 0)
+                if (!unprocessedOrdersExist)
+                {
                     Console.WriteLine("Nu exista comenzi neprocesate.");
+                }
             }
             else if (option == "2")
             {
@@ -204,6 +225,7 @@
                     if (order != null && !order.IsProcessed)
                     {
                         employee.ProcessOrder(order);
+                        order.ProcessOrder();
                     }
                     else
                     {
