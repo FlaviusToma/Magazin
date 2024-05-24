@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 
 public class LoginManager
 {
@@ -36,25 +37,51 @@ public class LoginManager
             }
         }
     }
+    public static bool IsValidEmail(string email)
+    {
+        try
+        {
+            var mailAddress = new MailAddress(email);
+            return true;
+        }
+        catch (FormatException)
+        {
+            return false;
+        }
+    }
 
     public bool AddUser(string username, string password, string firstName, string lastName, string address, string email, UserType userType)
     {
         if (!users.ContainsKey(username))
         {
-            if (userType == UserType.Client)
+            if (!IsValidEmail(email))
             {
-                users[username] = new Client(username, password, firstName, lastName, address, email);
+                Console.WriteLine("Adresa de email nu este validă.");
+                return false;
             }
-            else if (userType == UserType.Employee)
+
+            try
             {
-                users[username] = new Employee(username, password, firstName, lastName, address, email);
+                if (userType == UserType.Client)
+                {
+                    users[username] = new Client(username, password, firstName, lastName, address, email);
+                }
+                else if (userType == UserType.Employee)
+                {
+                    users[username] = new Employee(username, password, firstName, lastName, address, email);
+                }
+                SaveUsers();
+                return true;
             }
-            SaveUsers();  
-            return true;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"A apărut o eroare la adăugarea utilizatorului: Utilizatorul deja există");
+                return false;
+            }
         }
         else
         {
-            Console.WriteLine("Utilizatorul deja exista.");
+            Console.WriteLine("Utilizatorul deja există.");
             return false;
         }
     }

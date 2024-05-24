@@ -1,2 +1,3 @@
 Andreea,andreutza,Andreea,Chirita,andreeach1@gmail.com,andreeach@gmail.com,Client
 Flavius,flawyfla,Flavius,Toma,Strada Gruiului,flawyfla@yahoo.com,Employee
+Ionut,ionut123,Ionut,Ion,ionion@gmail.com,ionion@yahoo.com,Client
